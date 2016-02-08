@@ -1,105 +1,178 @@
-# MX ZIP#
+# MX GetID3#
 
-**MX Zip** adds you capability to add files/folders into zipping archive directly from ExpressionEngine 3;
+**MX GetID3** is a PHP script that extracts useful information from MP3s & other multimedia file formats for  ExpressionEngine 
+
+## Supported formats
+* Tag formats:
+* * ID3v1 (v1.0 & v1.1)
+* * ID3v2 (v2.2, v2.3 & v2.4)
+* * APE tags (v1 & v2)
+* * (Ogg) VorbisComment
+* * Lyrics3 (v1 & v2)
+* * IDivX
+* * Lossy Audio-only formats:
+* * MP3, MP2, MP1 (MPEG-1, layer III/II/I audio, including Fraunhofer, Xing and LAME VBR/CBR headers)
+* * Ogg Vorbis
+* * Musepack (versions SV4-SV8)
+* * AAC & MP4
+* * AC-3
+* * DTS
+* * RealAudio
+* * VQF
+* * Speex
+* * Digital Speech Standard (DSS)
+* * Audible Audiobooks
+* Lossless Audio-only formats:
+* * WAV (including extended chunks such as BWF and CART)
+* * AIFF
+* * Monkey's Audio
+* * FLAC & OggFLAC
+* * LA (Lossless Audio)
+* * OptimFROG
+* * WavPack
+* * TTA
+* * LPAC (Lossless Predictive Audio Compressor)
+* * Bonk
+* * LiteWave
+* * Shorten
+* * RKAU
+* * Apple Lossless Audio Codec
+* * RealAudio Lossless
+* * CD-audio (*.cda)
+* * NeXT/Sun .au
+* * Creative .voc
+* * AVR (Audio Visual Research)
+* * MIDI
+* Audio-Video formats:
+* * AVI
+* * Matroska (WebM)
+* * ASF (ASF, Windows Media Audio (WMA), Windows Media Video (WMV))
+* * MPEG-1 & MPEG-2
+* * Quicktime
+* * RealVideo
+* * NSV (Nullsoft Streaming Video)
+* Graphic formats:
+* * JPEG
+* * PNG
+* * GIF
+* * BMP (Windows & OS/2)
+* * TIFF
+* * SWF (Flash)
+* * PhotoCD
+* Data formats:
+* * ZIP
+* * TAR
+* * GZIP
+* * ISO 9660 (CD-ROM image)
+* * CUEsheets (.cue)
+* * SZIP
+* Metadata types:
+* * EXIF (Exchangeable image file format)
+* * IPTC
+* * XMP (Adobe Extensible Metadata Platform)
+* Formats identified, but not parsed:
+* * PDF
+* * RAR
+* * MS Office (.doc, .xls, etc)
 
 ## Installation
-* Download the latest version of MX Zip and extract the .zip to your desktop.
-* Copy *zip* to */system/user/addons/*
+* Download the latest version of MX GetID3 and extract the .zip to your desktop.
+* Copy *mx_getid3* to */system/user/addons/*
 
 ## Configuration
 Once the Plugin is installed, you should be able to see it listed in the Add-On Manager in your ExpressionEngine Control Panel. Is no needs in any control panel activation or configuration.
 
 ## Template Tags
-{exp:zip}
+{exp:mx_calc}
 
-	{exp:zip direct_output="no" folder="images" filename="min.zip" max_size="1024" comment="Made in ExpressionEngine" remove_path="" add_path=""}
-	    {zip:files}
-	        [themes/cp_global_images/watermark_test.jpg]
-	        [themes/cp_global_images/ee_logo.jpg]
-	        [themes/profile_themes/]
-	        [themes/cp_themes/classic/classic.css]
-	    {/zip:files}
+**JPEG:**
+
+	{exp:mx_getid3 file='/IMG00018-20100929-1318.jpg'}
+	{jpg}
+	<p>Size: {height}x{width}</p>
+	<p>Made by: {make} {model}</p>
+	<p>Date: {datetime}</p>
+	<p>Software: {software}</p>
+	{/jpg}
+	{/exp:mx_getid3} 
 	
-	{/exp:zip} 
+**JPEG Output:**
+
+	Size: 1600x1200
+	
+	Made by: Research In Motion BlackBerry 9000
+	
+	Date: 2010:09:29 13:17:42
+	
+	Software: Rim Exif Version1.00a 
+
+
+**MP3:**
+
+	{exp:mx_getid3 file='Brain Rules-Part01.mp3'}
+	    <p>File Name: {filename}</p>
+	    <p>Length: {playtime_seconds}</p>
+	    <p>Playtime: {playtime_string}</p>
+	
+		{id3v1}
+			<p>Title: {title}</p>
+			<p>Artist: {artist}</p>
+			<p>Album: {album}</p>
+			<p>Year: {year}</p>
+			<p>Genre: {genre}</p>
+		{/id3v1}
+	{/exp:mx_getid3} 
+
+**MP3 Output:**
+
+	File Name: Brain Rules-Part01.mp3
+	
+	Length: 4534.67428571
+	
+	Playtime: 1:15:35
+	
+	Title: Brain Rules - Part 1
+	
+	Artist: John Medina
+	
+	Album: Brain Rules - 12 Principles fo
+	
+	Year:
+	
+	Genre: Other
 
 ### Parameters
 
-*folder*
 
-folder whare you want to save your zip files in direct_output = false mode
+*file*
 
-*filename*
+Path to file (**full PATH!** not URL)
 
-zip fillename. By default the filename is unix_timestamp.zip
+*refresh*
 
-*remove_path* optional
+Refresh is the number of minutes between cache refreshes.
 
-This parameter gives the ability to suppress a part or all the path of the files (or directories) when they are extracted or archived.
+*debug*
 
-*add_path* optional
+Telling the true - description for all tags which you can use with getID3 library can take more time than writing this plugin. So , if you want to see available tags for target file, just add debug parameter to tag.
 
-This parameter gives the ability to insert a path while files are extracted or archived.
+*debug = "on" *
 
-*comment* optional
+**IMPORTANT**
 
-This parameter gives the ability to set a comment in the ZIP archive.
+Variables can be Single or Pairs.
 
-*remove_all_path* optional
-
-This parameter gives the ability to suppress all the path of the file when extracting it or adding it in the archive.
-
-*return_name_only* optional
-
-This parameter gives ability to return archive name only
-
-*max_size* optional 
-
-*overwrite* optional
-
-overwrite file or not
-
-*direct_output* optional
-
-	direct_output="no" 
-
-the plugin can sent direct to user or can save package file on the web server
-
-*speed* optional
-
-	speed="500" 
-	
-Download speed in kb
-
-### Conditional variables:
-	{if file_limit}
-	
-	{/if}
-
-You may use this conditional for displaying a message in the case when size of your files preparing for package more then max_size
-
-
-### Variable pairs
-
-	{zip:files}
-		[file_or_folder_path,folder_structure4zip]
-	{/zip:files}
-	
-A comma separated list of files/folders for packing
-
-      file_or_folder_path - file or folder which you want to zip with full or relative server path.
-
-      folder_structure4zip (optional) - individual folder path for file in the zip archive.
 
 ## Support Policy
 This is Communite Edition (CE) add-on.
 
-## Contributing To MX Zip for ExpressionEngine 3
+## Contributing To MX GetID3 for ExpressionEngine 3
 
-Your participation to MX ZIP development is very welcome!
+Your participation to MX GetID3 development is very welcome!
 
 You may participate in the following ways:
 
-* [Report issues](https://github.com/MaxLazar/mx-zip-ee3/issues)
+* [Report issues](https://github.com/MaxLazar/mx-getid3-ee3/issues)
 * Fix issues, develop features, write/polish documentation
 Before you start, please adopt an existing issue (labelled with "ready for adoption") or start a new one to avoid duplicated efforts.
 Please submit a merge request after you finish development.
@@ -107,4 +180,4 @@ Please submit a merge request after you finish development.
 
 ### License
 
-The MX Zip is open-sourced software licensed under the [MIT license](http://opensource.org/licenses/MIT)
+The MX GetID3 is open-sourced software licensed under the [MIT license](http://opensource.org/licenses/MIT)
